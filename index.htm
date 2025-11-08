@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Custom Investigator Creator Tool - Mansions of Madness: 2nd Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Suez+One&family=IBM+Plex+Serif&family=Vesper+Libre:wght@500&family=IM+Fell+English+SC&family=EB+Garamond&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="assets/doc-styles.css" />
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas-pro@1.5.12/dist/html2canvas-pro.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
+  <script type="text/javascript" src="assets/hammer.min.js"></script>
+  <script type="text/javascript" src="assets/app.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+</head>
+<body>
+  <header class="bd-header py-3 d-flex align-items-stretch border-bottom border-dark" style="height: 90px; overflow: hidden; background-color: black;">
+    <div class="container-fluid d-flex align-items-center clearfix">
+      <img src="img/mom-icon.webp" class="float-start" alt="" width="50px" />
+      <div class="float-start ms-2" style="color: #fff;">
+        <span class="fs-4">Custom Investigator Creator Tool</span><br />
+        <span>For Mansions of Madness: 2nd Edition</span>
+      </div>
+    </div>
+  </header>
+  <div class="main-container">
+    <div class="row m-0 p-0 main-row">
+      <!-- Column 1 -->
+      <div class="col-xs-auto col-md-auto m-0 p-0 column-1">
+        <a href="javascript:void(0);" class="tab" alt="expand" id="expand"><i class="bi bi-chevron-double-right"></i></a>
+        <div class="px-3 pb-3 col-1-inner" style="font-size: 0.9em;">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDrawerLabel">Investigators</h5>
+            <button type="button" class="btn-close" id="expand-close" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="mb-3">
+              View and edit previously saved investigators.
+            </div>
+            <div class="mb-3" id="investigator-list">
+              <p>No investigators saved.</p>
+            </div>
+            <div class="mb-3">
+              <button id="export" type="submit" class="btn btn-danger float-end"><i class="bi bi-download"></i> Export</button>
+              <button id="load" type="submit" class="btn btn-secondary float-end mx-1"><i class="bi bi-upload"></i> Load</button>
+              <input type="file" id="jsonFileInput" accept=".json" class="float-end hide" style="display: none;" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Column 2 -->
+      <div class="col-xs-12 col-md-6 m-0 p-0 column-2">
+        <div class="card-container">
+          <div class="front" id="card-front">
+            <div class="card">
+              <div id="profile-image-hover" class="card-hover" data-focus="input-imageurl"></div>
+              <div id="profile-image">
+                <img src="img/profile-generic-male.webp" alt="" />
+              </div>
+              <div id="profile-name" class="noselect card-hover" data-focus="input-name">Howard Phillips</div>
+              <div id="profile-job" class="noselect card-hover" data-focus="input-job">Novelist</div>
+              <div id="ability" class="noselect card-hover" data-focus="input-ability">
+                <strong>Action:</strong> You become <strong>focused</strong>. Test (<span class="lore"></span>:2). If you succeed, you become invisible to enemies until the next round. 
+              </div>
+              <div id="stats">
+                <div id="stats-damage" class="stat-7 card-hover" data-focus="select-health"></div>
+                <div id="stats-horror" class="stat-7 card-hover" data-focus="select-sanity"></div>
+              </div>
+              <div id="attributes">
+                <div id="attributes-strength" class="attribute-3 card-hover" data-focus="select-strength"></div>
+                <div id="attributes-agility" class="attribute-3 card-hover" data-focus="select-agility"></div>
+                <div id="attributes-observation" class="attribute-3 card-hover" data-focus="select-observation"></div>
+                <div id="attributes-lore" class="attribute-5 card-hover" data-focus="select-lore"></div>
+                <div id="attributes-influence" class="attribute-4 card-hover" data-focus="select-influence"></div>
+                <div id="attributes-will" class="attribute-3 card-hover" data-focus="select-will"></div>
+              </div>
+            </div>
+          </div>
+          <div class="back" id="card-back">
+            <div id="story" class="card-hover" data-focus="input-story">
+              <i>"Locked room with no signs of forced entry anywhere. Could the poor bastard have killed himself? Seems unlikely with the amount of blood everywhere. Strange markings underneath the victim's body. Some kind of ritual? Who killed him? What killed him? ... "</i>
+              <br />
+              <br />
+              Jack Harding, the hard boiled, eagle-eyed detective routinely breaks the rules in an effort to catch the criminals. Determined and street-wise, Jack uses his wits and deductive abilities to solve the case at any cost.
+            </div>
+          </div>
+        </div>
+        <div class="card-container-buttons clearfix">
+          <div class="float-start">
+            <div class="btn-group">
+              <button id="view-front" type="button" class="btn btn-outline-secondary btn-lg active"><i class="bi bi-person-vcard"></i> View Front</button>
+              <button id="view-back" type="button" class="btn btn-outline-secondary btn-lg"><i class="bi bi-card-heading"></i> View Back</button>
+            </div>
+          </div>
+          <div class="float-end">
+            <button id="save-image" type="submit" class="btn btn-danger btn-lg"><i class="bi bi-image"></i> Save Image As</button>
+          </div>
+        </div>
+      </div>
+      <!-- Column 3 -->
+      <div class="col-xs-auto col-md-auto m-0 p-0 column-3">
+        <div class="">
+          <div class="mx-3 my-5">
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#profileFields" data-bs-toggle="collapse" data-target="#investigatorData" aria-expanded="false" aria-controls="profileFields">
+                    <strong>Profile</strong>
+                  </button>
+                </h2>
+                <div id="profileFields" class="accordion-collapse collapse show">
+                  <div class="accordion-body">
+                    <div class="form-group m-2">
+                      <label for="input-name">
+                        <strong>Character Name</strong>
+                      </label>
+                      <input id="input-name" name="name" type="text" class="form-control input-data" data-ref="profile-name" maxlength="25" placeholder="Howard Phillips" />
+                    </div>
+                    <div class="form-group m-2">
+                      <label for="input-job">
+                        <strong>Character Occupation</strong>
+                      </label>
+                      <input id="input-job" name="job" type="text" class="form-control input-data" data-ref="profile-job" maxlength="30" placeholder="Novelist" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#profileImageField" data-bs-toggle="collapse" data-target="#profileImageField" aria-expanded="false" aria-controls="profileImageField">
+                    <strong>Profile Image</strong>
+                  </button>
+                </h2>
+                <div id="profileImageField" class="accordion-collapse collapse">
+                  <div class="accordion-body">
+                    <div class="form-group m-2">
+                      <label class="control-label" for="input-uploadimage">
+                        <strong>Character Image</strong>
+                      </label>
+                      <p>Image dimensions of 400 x 480 pixels and less than 1 MB are preferred otherwise the image will be resized to fit the card template. </p>
+                      <p><strong>Use a direct image URL</strong> (upload your image to a <a href="https://www.google.com/search?q=free+image+hosting+services&ie=UTF-8" target="_blank">free image hosting service</a> and copy and paste the link here). This is required if you want to save multiple investigators or use your investigators with the <a href="https://zxcvea.github.io/mom2einvestigators/" target="_blank">Investigator Cards App</a>, otherwise a generic image will display.</p>
+                      <input id="input-imageurl" name="name" type="text" class="form-control input-data" data-ref="profile-image" maxlength="100" placeholder="https://i.imgur.com/BtEY4cS.jpeg" />
+                    </div>
+                    <div class="p-2">
+                      <div class="separator">OR</div>
+                    </div>
+                    <div class="form-group m-2">
+                      <p class="mb-1"><strong>Upload an image.</strong></p>
+                      <p class="blockp px-3 py-3 mb-2 alert alert-warning">
+                        Uploaded images are not saved and should only be used for generating an image for a single investigator for physical printing. 
+                      </p>
+                      <div class="preview-zone hidden">
+                        <div class="box box-solid">
+                          <div class="box-header with-border">
+                            <div><b>Preview</b></div>
+                            <div class="box-tools pull-right">
+                              <button type="button" class="btn-close remove-preview" aria-label="Close">
+                                <span aria-hidden="true">&nbsp;</span>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="box-body"></div>
+                        </div>
+                      </div>
+                      <div class="dropzone-wrapper">
+                        <div class="dropzone-desc">
+                          <i class="glyphicon glyphicon-download-alt"></i>
+                          <p>Choose an image file or drag it here.</p>
+                        </div>
+                        <input id="input-uploadimage" type="file" name="img_logo" class="dropzone" accept="image/*" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#abilityField" data-bs-toggle="collapse" data-target="#abilityField" aria-expanded="false" aria-controls="abilityField">
+                    <strong>Special Ability</strong>
+                  </button>
+                </h2>
+                <div id="abilityField" class="accordion-collapse collapse">
+                  <div class="accordion-body">
+                    <div class="form-group m-2">
+                      <label for="input-ability">
+                        <strong>Special Ability</strong> (<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target=".ability-text-modal" data-toggle="modal" data-target=".ability-text-modal">View special text</a>)
+                      </label>
+                      <p class="my-1">Example:</p>
+                      <p class="blockp px-3 py-3 mb-2 alert alert-warning">
+                        {action} You may heal you or another investigator. Discard Damage or Horror equal to the result of a {will} check of the patient.
+                      </p>
+                      <textarea id="input-ability" name="ability" type="textarea" class="form-control input-data" data-ref="ability" style="height: 60px;" maxlength="200" placeholder="{action} You become {focused}. Test ({lore}:2). If you succeed, you become invisible to enemies until the next round."></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#storyField" data-bs-toggle="collapse" data-target="#storyField" aria-expanded="false" aria-controls="storyField">
+                    <strong>The Story So Far</strong>
+                  </button>
+                </h2>
+                <div id="storyField" class="accordion-collapse collapse">
+                  <div class="accordion-body">
+                    <div class="form-group m-2">
+                      <p class="mb-2">
+                        <label for="input-story mb-2">
+                          <strong>The Story So Far</strong> (<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target=".story-text-modal" data-toggle="modal" data-target=".story-text-modal">View special text</a>)
+                        </label>
+                      </p>
+                      <textarea id="input-story" name="story" type="textarea" class="form-control input-data" data-ref="story" style="height: 150px;" maxlength="1000" placeholder=""></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#statsAttributesField" data-bs-toggle="collapse" data-target="#statsAttributesField" aria-expanded="false" aria-controls="statsAttributesField">
+                    <strong>Stats & Attributes</strong>
+                  </button>
+                </h2>
+                <div id="statsAttributesField" class="accordion-collapse collapse">
+                  <div class="accordion-body">
+                    <div class="form-group m-2">
+                      <label>
+                        <strong>Stats</strong>
+                      </label>
+                      <p class="my-1">For balanced investigators for gameplay, Health and Sanity should total to 14 e.g. 6 Health + 8 Sanity, 5 Health + 9 Sanity, etc. Attributes should total 21. </p>
+                    </div>
+                    <table class="table table-stats">
+                      <tbody>
+                        <tr>
+                          <th scope="row"><label for="select-health">Health</label></th>
+                          <td>
+                            <select class="form-select" name="health" id="select-health" data-ref="stats-damage">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>6</option>
+                              <option selected>7</option>
+                              <option>8</option>
+                              <option>9</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-sanity">Sanity</label></th>
+                          <td>
+                            <select class="form-select" name="sanity" id="select-sanity" data-ref="stats-horror">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>6</option>
+                              <option selected>7</option>
+                              <option>8</option>
+                              <option>9</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-strength">Strength</label></th>
+                          <td>
+                            <select class="form-select" name="strength" id="select-strength" data-ref="attributes-strength">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-agility">Agility</label></th>
+                          <td>
+                            <select class="form-select" name="agility" id="select-agility" data-ref="attributes-agility">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-observation">Observation</label></th>
+                          <td>
+                            <select class="form-select" name="observation" id="select-observation" data-ref="attributes-observation">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-lore">Lore</label></th>
+                          <td>
+                            <select class="form-select" name="lore" id="select-lore" data-ref="attributes-lore">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option selected>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-influence">Influence</label></th>
+                          <td>
+                            <select class="form-select" name="influence" id="select-influence" data-ref="attributes-influence">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option selected>4</option>
+                              <option>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><label for="select-will">Will</label></th>
+                          <td>
+                            <select class="form-select" name="will" id="select-will" data-ref="attributes-will">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </dropdown>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion mb-3">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed py-2 px-3" type="button" data-toggle="collapse" data-bs-target="#imageSettings" data-bs-toggle="collapse" data-target="#imageSettings" aria-expanded="false" aria-controls="imageSettings">
+                    <strong>Save Image Settings</strong>
+                  </button>
+                </h2>
+                <div id="imageSettings" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="mb-1">
+                      <input type="checkbox" id="checkbox-imagetype" class="form-check-input" /> <label class="form-check-label" for="checkbox-imagetype">Save images as PNG</label>
+                    </div>
+                    <p class="my-0"><small>Better for printing but images will have a larger file size. Images are saved as JPEG by default.</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid gap-2">
+              <button id="save" type="submit" class="btn btn-danger btn-lg"><i class="bi bi-save"></i> Save Investigator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal ability-text-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Special text for Abilities</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Input Text</th>
+                <th scope="col">Converted Text</th>
+                <th scope="col">Description</th>
+              </tr>
+            <tbody>
+              <tr>
+                <td>{text}</td>
+                <td><strong>text</strong></td>
+                <td>Outputs the text as bold.</td>
+              </tr>
+              <tr>
+                <td>{action}</td>
+                <td><strong>Action:</strong></td>
+                <td>Outputs <strong>Action:</strong> text</td>
+              </tr>
+              <tr>
+                <td>{strength}</td>
+                <td><span class="icon strength"></span></td>
+                <td>Outputs <span class="icon strength"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{agility}</td>
+                <td><span class="icon agility"></span></td>
+                <td>Outputs <span class="icon agility"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{observation}</td>
+                <td><span class="icon observation"></span></td>
+                <td>Outputs <span class="icon observation"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{lore}</td>
+                <td><span class="icon lore"></span></td>
+                <td>Outputs <span class="icon lore"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{influence}</td>
+                <td><span class="icon influence"></span></td>
+                <td>Outputs <span class="icon influence"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{will}</td>
+                <td><span class="icon will"></span></td>
+                <td>Outputs <span class="icon will"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{?}</td>
+                <td><span class="icon investigation"></span></td>
+                <td>Outputs <span class="icon investigation"></span> icon</td>
+              </tr>
+              <tr>
+                <td>{success}</td>
+                <td><span class="icon success"></span></td>
+                <td>Outputs <span class="icon success"></span> icon</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal story-text-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Special text for The Story So Far</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Input Text</th>
+                <th scope="col">Converted Text</th>
+                <th scope="col">Description</th>
+              </tr>
+            <tbody>
+              <tr>
+                <td>{text}</td>
+                <td><strong>text</strong></td>
+                <td>Outputs the text as bold.</td>
+              </tr>
+              <tr>
+                <td>[text]</td>
+                <td><i>&quot;text&quot;</i></td>
+                <td>Outputs the text as a quote.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal alert-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="alert-message" class="alert alert-danger">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
